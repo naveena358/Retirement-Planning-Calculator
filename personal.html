@@ -1,0 +1,353 @@
+<<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>RETIREMENT PLANNING CALCULATOR</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
+<link rel="stylesheet" href="./style.css">
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+</head>
+<body class="bg_personal">
+<center class="fs-title">RETIREMENT PLANNING CALCULATOR - (PERSONAL)</center>
+
+<form id="msform">
+
+    <table style="margin:20px;">
+      <tr>
+        <td width="55%" >
+        <fieldset class="input_form">
+          <table class="table_pd">
+
+            <tr class="spacy_tr">
+                <td width="50%">
+                  <label>Select your gender <span class="error_cls">*</span></label>
+                <select name="gender" id="gender" onchange="fillLEData(this.value);">
+                  <option value="">Select here</option>
+                  <option value="F">Female</option>
+                  <option value="M">Male</option>
+                </select>
+              </td>
+              <td>
+                <label>Select your current age <span class="error_cls">*</span></label>
+                <select name="user_age" id="user_age">
+                  <option value="">Select here</option>
+                </select>
+              </td>
+            </tr>
+
+
+            <tr class="spacy_tr">
+                <td width="50%">
+                  <label>Select planned retirement age <span class="error_cls">*</span></label>
+                  <select name="retiremnt_age" id="retiremnt_age">
+                    <option selected="true" disabled>Choose here</option>
+                    <option value="55">Retiring at 55</option>
+                    <option value="60">Retiring at 60</option>
+                    <option value="65">Retiring at 65</option>
+                    <option value="70">Retiring at 70</option>
+                  </select>
+              </td>
+              <td>
+                <label>Select expected age of death <span class="error_cls">*</span></label>
+                <select name="exp_age_death" id="exp_age_death">
+                  <option selected="true" disabled>Choose here</option>
+                </select>
+              </td>
+            </tr>
+
+
+          </table>
+
+           <!-- <div class="fs-sub-title" style="float:left; margin-top:30px">Financial Details</div> -->
+
+
+          <table class="table_pd">
+            <tr class="spacy_tr">
+              <td width="50%">
+                <label>Enter current anuual salary/wage <span class="error_cls">*</span></label>
+                <input type="text" name="user_current_salary" id="user_current_salary" class="big_txt" onkeypress="return isNumber(event)" />
+                <div class="cust-icon">&#36;</div>
+              </td>
+              <td>
+                <label>How much % of your current annual income will you want in retirement? <span class="error_cls">*</span></label>
+                <input type="text" name="pc_current_salary" id="pc_current_salary" class="big_txt" onkeypress="return isNumber(event)"  />
+                <div class="cust-icon">&#37;</div>
+              </td>
+            </tr>
+            <tr class="spacy_tr">
+              <td width="50%">
+                <label>Social Security <span class="error_cls">*</span></label>
+                <input type="text" name="ss_income" id="ss_income" class="big_txt" onkeypress="return isNumber(event)" />
+                <div class="cust-icon">&#36;</div>
+              </td>
+              <td>
+                <label>Traditional Employer Pension</label>
+                <input type="text" name="tep_income" id="tep_income" class="big_txt" value="0" onkeypress="return isNumber(event)" />
+                <div class="cust-icon">&#36;</div>
+              </td>
+            </tr>
+            <tr class="spacy_tr">
+                <td width="50%">
+                  <label>Part-time income</label>
+                  <input type="text" name="part_income" id="part_income" class="big_txt"  value="0" onkeypress="return isNumber(event)" />
+                  <div class="cust-icon">&#36;</div>
+              </td>
+              <td>
+                <label>Other (reverse annuity mortgage payments, earnings on assets, etc.)</label>
+                <input type="text" name="other_income" id="other_income" class="big_txt"  value="0" onkeypress="return isNumber(event)" />
+                <div class="cust-icon">&#36;</div>
+              </td>
+            </tr>
+
+            <tr class="spacy_tr">
+              <td colspan="2">
+                <label>Enter your savings to date <br />(include money accumulated in a 401(k), IRA, or similar retirement plan) <span class="error_cls">*</span></label>
+                <input style="width:92% !important" type="text" name="savings_to_date" id="savings_to_date" class="biggest_txt" onkeypress="return isNumber(event)" />
+                <div class="cust-icon">&#36;</div>
+              </td>
+
+            </tr>
+
+            <tr id="error_td">
+              <td colspan="2">
+                 <center class="error_cls">
+                   Please fill in all the required * fields.
+                 </center>
+              </td>
+            </tr>
+
+            <tr>
+              <td class="resetbut_td">
+              <input type="button" class="reset action-button" value="Reset Form" />
+            </td>
+            <td class="calcbut_td">
+              <input type="button" onclick="calculateAmounts();" class="nextbutton action-button" value="Calculate" />
+              </td>
+            </tr>
+
+          </table>
+
+        </fieldset>
+
+
+
+        </td>
+
+        <td id="result_td" width="50%" style="padding-left:15px; vertical-align:top; opacity:0.8">
+          <div class="res_title">
+            Result: My Retirement Savings Plan
+          </div>
+
+          <fieldset class="res_fs">
+
+          <table class="result_tbl">
+            <tr class="hide_row">
+              <td class="color_text" align="center">1) The annual income you will want in retirement : <img id="r1_info" src="info.png"></td>
+              <td>
+                <input type="text" name="ann_income" id="ann_income" class="sm_txt" readonly />
+                <div class="cust-icon">&#36;</div>
+              </td>
+            </tr>
+            <tr class="hide_row">
+              <td class="color_text">2) Income you expect to receive annually from various sources (Social security etc.) : <img id="r2_info" src="info.png"></td>
+              <td><input type="text" name="ot_income" id="ot_income" class="sm_txt" readonly /><div class="cust-icon">&#36;</div></td>
+            </tr>
+            <tr class="hide_row">
+              <td class="color_text">3) The amount you need to make up for each retirement year is : <img id="r3_info" src="info.png"></td>
+              <td><input type="text" name="amt_makeup_per_year" id="amt_makeup_per_year" class="sm_txt" readonly /><div class="cust-icon">&#36;</div></td>
+            </tr>
+            <tr class="hide_row">
+              <td class="color_text">4) The amount you'll need to save is : <img id="r4_info" src="info.png"></td>
+              <td><input type="text" name="amt_need_to_save" id="amt_need_to_save" class="sm_txt" readonly /><div class="cust-icon">&#36;</div></td>
+            </tr>
+            <tr class="hide_row">
+              <td class="color_text">5) Your savings to date multiplied by the factor is : <img id="r5_info" src="info.png"></td>
+              <td><input type="text" name="savings_to_date_m" id="savings_to_date_m" class="sm_txt" readonly /><div class="cust-icon">&#36;</div></td>
+            </tr>
+            <tr>
+              <td class="color_text">Total additional savings needed at retirement :</td>
+              <td><input type="text" name="additional_savings" id="additional_savings" class="sm_txt" readonly /><div class="cust-icon">&#36;</div></td>
+            </tr>
+            <tr>
+              <td class="color_text">The ANNUAL amount you'll need to save is :</td>
+              <td><input type="text" name="annual_savings" id="annual_savings" class="sm_txt" readonly /><div class="cust-icon">&#36;</div></td>
+            </tr>
+          </table>
+
+        </fieldset>
+
+        <table class="print_but_tbl">
+          <tr>
+            <td align="right" id="td_print_button" style="display:none1">
+            <input type="hidden" id="calc_flag" value="0" />
+            <input type="button" id="whatif_button" class="whatif_button action-button" value="What If"/>
+            <input type="button" id="print_button" class="print_button action-button" value="Print" />
+          </td>
+          </tr>
+        </table>
+
+        </td>
+      </tr>
+    </table>
+
+
+</form>
+
+<div id="dialog-form" title="Try different scenarios">
+  <form id="popup_form">
+    <!-- <fieldset> -->
+      <label>Select planned retirement age</label>
+      <select name="pop_retiremnt_age" id="pop_retiremnt_age">
+        <option selected="true" disabled>Choose here</option>
+        <option value="55">Retiring at 55</option>
+        <option value="60">Retiring at 60</option>
+        <option value="65">Retiring at 65</option>
+        <option value="70">Retiring at 70</option>
+      </select>
+
+      <label>Select expected age of death</label>
+      <select name="pop_exp_age_death" id="pop_exp_age_death">
+        <option selected="true" disabled>Choose here</option>
+      </select>
+
+      <label>How much % of your current annual income will you want in retirement?</label>
+      <input type="text" name="pop_pc_current_salary" id="pop_pc_current_salary" class="big_txt" onkeypress="return isNumber(event)"  />
+      <div class="cust-icon popup-cust-icon">&#37;</div>
+
+      <label>Enter your savings to date <br />(include money accumulated in a 401(k), IRA, or similar retirement plan)</label>
+      <input style="width:90% !important" type="text" name="pop_savings_to_date" id="pop_savings_to_date" class="biggest_txt" onkeypress="return isNumber(event)" />
+      <div class="cust-icon popup-cust-icon">&#36;</div>
+
+
+    <!-- </fieldset> -->
+  </form>
+</div>
+
+<div id="content_for_print" style="display:none;">
+
+  <style>
+  body {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  }
+  .marginup {
+    margin-top:20px;
+  }
+  .marginbottom {
+    margin-bottom:20px;
+  }
+  .customers {
+    border-collapse: collapse;
+    width: 80%;
+  }
+  .customers td, .customers th {
+    border: 1px solid #ddd;
+    padding: 8px;
+    font-weight: 500;
+    color: #132558;
+  }
+  .ss_td{
+    line-height: 1.7em;
+  }
+
+  .customers td span {
+    font-weight: 400;
+    color:#dc5a0d;
+  }
+  .rsp_title {
+    font-size: 1.4em;
+    margin:20px 0 25px 0;
+  }
+  .rs_title{
+    width: 80%;
+    text-align: left;
+    margin:40px 0 0;
+    color:#66710f;
+  }
+
+  </style>
+
+
+  <center>
+    <div class="rsp_title">
+      Retirement Savings Plan Summary
+    </div>
+
+    <table class="customers marginup">
+
+      <tr>
+        <td>Gender: <span id="rps_gender">Male</span></td>
+        <td>Current Age: <span id="rps_user_age">35 yrs</span></td>
+      </tr>
+      <tr>
+        <td>Your planned retirement age: <span id="rps_retiremnt_age">65 yrs</span></td>
+        <td>Your life expectancy: <span id="rps_exp_age_death">86 yrs</span></td>
+      </tr>
+      <tr>
+        <td>Current anuual salary/wage: <span id="rps_user_current_salary">john</span></td>
+        <td>% of current annual income you will want in retirement: <span id="rps_pc_current_salary">70</span></td>
+      </tr>
+      <tr>
+        <td>The income you expect to receive annually from:</td>
+        <td class="ss_td">
+            <p>Social Security: <span id="rps_ss_income">2000</span></p>
+            <p>Traditional Employer Pension: <span id="rps_tep_income">2000</span></p>
+            <p>Part-time income: <span id="rps_part_income">2000</span></p>
+            <p>Other income: <span id="rps_other_income">2000</span></p>
+        </td>
+      </tr>
+      <tr>
+        <td class="ss_td">Your savings to date (include money accumulated in a 401(k), IRA, or similar retirement plan):</td>
+        <td><span id="rps_savings_to_date">2000</span></td>
+      </tr>
+    </table>
+
+    <div class="rs_title">
+      Result based on your inputs:
+    </div>
+    <table class="customers marginup marginbottom">
+      <!-- <tr>
+        <td width="60%">The annual income you will want in retirement:</td>
+        <td><span id="rps_ann_income">1000</span></td>
+      </tr>
+      <tr>
+        <td>Income you expect to receive annually from various sources (Social security etc.):</td>
+        <td><span id="rps_ot_income">1000</span></td>
+      </tr>
+      <tr>
+        <td>The amount you need to make up for each retirement year</td>
+        <td><span id="rps_amt_makeup_per_year">1000</span></td>
+      </tr>
+      <tr>
+        <td>The amount you'll need to save is</td>
+        <td><span id="rps_amt_need_to_save">1000</span></td>
+      </tr>
+      <tr>
+        <td>Your savings to date multiplied by the factor</td>
+        <td><span id="rps_savings_to_date_m">1000</span></td>
+      </tr> -->
+      <tr>
+        <td>Total additional savings needed at retirement</td>
+        <td><span id="rps_additional_savings">1000</span></td>
+      </tr>
+      <tr>
+        <td>The ANNUAL amount you'll need to save</td>
+        <td><span id="rps_annual_savings">1000</span></td>
+      </tr>
+
+   </table>
+  </center>
+
+
+</div>
+
+
+
+<script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+<script src='http://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js'></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+<script  src="./script.js"></script>
+
+</body>
+</html>
